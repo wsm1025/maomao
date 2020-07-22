@@ -22,7 +22,7 @@
 <script>
 	import Header from '@/components/header'
 	import Tabbar from '@/components/tabbar'
-	import Cinemalist from "@/components/CinemaList"
+	import Cinemalist from '@/components/CinemaList'
 	export default {
 		name: 'Cinema',
 		components: {

@@ -3,28 +3,20 @@
 		<div class="search_input">
 			<div class="search_input_wrapper">
 				<i class="iconfont icon-sousuo"></i>
-				<input type="text">
+				<input type="text" v-model="message">
 			</div>
 		</div>
 		<div class="search_result">
-			<h3>电影/电视剧/综艺</h3>
+			<h3>电影/电影院</h3>
 			<ul>
-				<li>
-					<div class="img"><img src="/images/movie_1.jpg"></div>
+				<li v-for="n in movielist" :key="n.id">
+					<div class="img"><img :src="n.img | imgpath"></div>
 					<div class="info">
-						<p><span>无名之辈</span><span>8.5</span></p>
-						<p>A Cool Fish</p>
-						<p>剧情,喜剧,犯罪</p>
-						<p>2018-11-16</p>
-					</div>
-				</li>
-				<li>
-					<div class="img"><img src="/images/movie_1.jpg"></div>
-					<div class="info">
-						<p><span>无名之辈</span><span>8.5</span></p>
-						<p>A Cool Fish</p>
-						<p>剧情,喜剧,犯罪</p>
-						<p>2018-11-16</p>
+						<p><span style="display: block;">{{n.nm}}</span><span>{{n.sc}}</span></p>
+						<p v-if="n.enm">{{n.enm}}</p>
+						<p v-else>无</p>
+						<p>{{n.cat}}</p>
+						<p>{{n.rt}}</p>
 					</div>
 				</li>
 			</ul>
@@ -33,8 +25,45 @@
 </template>
 
 <script>
+	import Vue from 'vue'
+	Vue.filter("imgpath", function(res) {
+		return res.replace("w.h", "128.168");
+	});
 	export default {
-		name: 'search'
+		name: 'search',
+		data() {
+			return {
+				message: '',
+				movielist: []
+			}
+		},
+		methods: {
+			cancelRequest() {
+				if (typeof this.source === 'function') {
+					this.source('终止请求')
+				}
+			},
+		},
+		watch: {
+			message(newVal) {
+				var that = this;
+				this.cancelRequest();
+				this.axios.get(`/searchlist/movies?keyword=${newVal}&ci=30&offset=20&limit=20`, {
+					cancelToken: new this.axios.CancelToken(function(c) {
+						that.source = c;
+					})
+				}).then(res => {
+					this.movielist = res.data.movies; //重启
+				}).catch((err) => {
+					if (this.axios.isCancel(err)) {
+						return 1;
+					} else {
+						//handle error
+						return;
+					}
+				})
+			}
+		},
 	}
 </script>
 
@@ -102,6 +131,9 @@
 		float: left;
 		margin-left: 15px;
 		flex: 1;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.search_body .search_result .info p {
@@ -109,6 +141,15 @@
 		display: flex;
 		line-height: 22px;
 		font-size: 12px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.search_body .search_result .info p span {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.search_body .search_result .info p:nth-of-type(1) span:nth-of-type(1) {

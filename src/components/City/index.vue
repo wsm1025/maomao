@@ -92,7 +92,7 @@
 				window.localStorage.setItem("cityName",name);
 				this.$router.push('/movie/nowplaying');
 				
-				// window.location.reload() ;
+				 window.location.reload() ;
 			}
 		}
 	}

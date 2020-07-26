@@ -5,9 +5,9 @@
 			<ul v-if="movielist.length"><!-- 此处用了v-if指令，用better-scroller，如果没有v-else会报错 -->
 			<li class="pulldown">{{pulldownmessage}}</li>
 				<li v-for="n in movielist" :key="n.filmId">
-					<div class="pic_show"><img :src="n.poster"></div>
+					<div class="pic_show" @tap="handleTotail(n.filmId)"><img :src="n.poster"></div>
 					<div class="info_list">
-						<h2>{{n.name}}</h2>
+						<h2 @tap="handleTotail(n.filmId)">{{n.name}}</h2>
 						<p v-if="n.actors">主演:{{n.actors | actorfilter}}</p>
 						<p v-else>暂无主演</p>
 						<p>上映时间:{{n.premiereAt*1000 | formatDate('MM月DD日')}}</p>
@@ -58,6 +58,9 @@
 			})
 		},
 		methods:{
+			handleTotail(MovieId){
+				this.$router.push('/movie/detail/2/'+ MovieId)
+			},
 			handleToScroll(pos) {
 				if (pos.y > 20) {
 					this.pulldownmessage = '正在更新';

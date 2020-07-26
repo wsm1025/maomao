@@ -1,22 +1,25 @@
 <template>
 	<div class="cinema_body">
-		<ul>
-			<li v-for="n in cinemalist" :key="n.cinemaId">
-				<div>
-					<span>{{n.name}}</span>
-					<span class="q"><span class="price">{{n.lowPrice/100}}</span> 元起</span>
-				</div>
-				<div class="address">
-					<span>{{n.address}}</span>
-					<!-- <span>{{n.Distance}}</span> -->
-				</div>
-		<!-- 		<div class="card">
-					<div>小吃</div>
-					<div>折扣卡</div>
-				</div> -->
-			</li>
-			
-		</ul>
+		<Loading v-if="isLoading"></Loading>
+		<Scroller v-else>
+			<ul>
+				<li v-for="n in cinemalist" :key="n.cinemaId">
+					<div>
+						<span>{{n.name}}</span>
+						<span class="q"><span class="price">{{n.lowPrice/100}}</span> 元起</span>
+					</div>
+					<div class="address">
+						<span>{{n.address}}</span>
+						<!-- <span>{{n.Distance}}</span> -->
+					</div>
+			<!-- 		<div class="card">
+						<div>小吃</div>
+						<div>折扣卡</div>
+					</div> -->
+				</li>
+				
+			</ul>
+		</Scroller>
 	</div>
 </template>
 
@@ -25,11 +28,15 @@
 		name: 'cinemalist',
 		data(){
 			return {
-				cinemalist:[]
+				cinemalist:[],
+				isLoading:true,
+				prevCityId:-1
 			}
 		},
-		mounted() {
-			var id = localStorage.getItem('cityId');
+		activated() {
+			var id = this.$store.state.city.cityId;
+			if(this.prevCityId === id){return ;}
+			this.isLoading = true;
 			this.axios({
 				url: `https://m.maizuo.com/gateway?cityId=${id}&ticketFlag=1&k=2859771`,
 				headers: {
@@ -38,6 +45,8 @@
 				}
 			}).then(res=>{
 				this.cinemalist = res.data.data.cinemas;
+				this.isLoading = false;
+				this.prevCityId = id;
 			})
 		}
 	}
@@ -46,7 +55,7 @@
 <style scoped>
 	#content .cinema_body {
 		flex: 1;
-		overflow: auto;
+		overflow: hidden;
 	}
 
 	.cinema_body ul {

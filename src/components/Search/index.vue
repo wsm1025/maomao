@@ -1,4 +1,5 @@
 <template>
+	<Scroller>
 	<div class="search_body">
 		<div class="search_input">
 			<div class="search_input_wrapper">
@@ -8,20 +9,21 @@
 		</div>
 		<div class="search_result">
 			<h3>电影/电影院</h3>
-			<ul>
-				<li v-for="n in movielist" :key="n.id">
-					<div class="img"><img :src="n.img | imgpath"></div>
-					<div class="info">
-						<p><span style="display: block;">{{n.nm}}</span><span>{{n.sc}}</span></p>
-						<p v-if="n.enm">{{n.enm}}</p>
-						<p v-else>无</p>
-						<p>{{n.cat}}</p>
-						<p>{{n.rt}}</p>
-					</div>
-				</li>
-			</ul>
+				<ul>
+					<li v-for="n in movielist" :key="n.id">
+						<div class="img"><img :src="n.img | imgpath"></div>
+						<div class="info">
+							<p><span style="display: block;">{{n.nm}}</span><span>{{n.sc}}</span></p>
+							<p v-if="n.enm">{{n.enm}}</p>
+							<p v-else>无</p>
+							<p>{{n.cat}}</p>
+							<p>{{n.rt}}</p>
+						</div>
+					</li>
+				</ul>
 		</div>
 	</div>
+</Scroller>
 </template>
 
 <script>
@@ -67,10 +69,10 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	#content .search_body {
 		flex: 1;
-		overflow: auto;
+		overflow: hidden;
 	}
 
 	.search_body .search_input {

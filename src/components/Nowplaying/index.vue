@@ -5,9 +5,9 @@
 			<ul v-if="movielist.length">
 				<li class="pulldown">{{pulldownmessage}}</li>
 				<li v-for="n in movielist" :key="n.filmId">
-					<div class="pic_show" @tap="handleTotail"><img :src="n.poster"></div>
+					<div class="pic_show" @tap="handleTotail(n.filmId)"><img :src="n.poster"></div>
 					<div class="info_list">
-						<h2>{{n.name}}<img src="@/assets/3D.png" v-if="n.item.name==='3D' " alt="" /></h2>
+						<h2  @tap="handleTotail(n.filmId)">{{n.name}}<img src="@/assets/3D.png" v-if="n.item.name==='3D' " alt="" /></h2>
 						<p v-if="n.grade">观众评分<span class="grade">{{n.grade}}</span></p>
 						<p v-else><span class="grade">暂无评分</span></p>
 						<p v-if="n.actors">主演:{{n.actors | actorfilter}}</p>
@@ -53,6 +53,7 @@
 				}
 			}).then(res => {
 				this.movielist = res.data.data.films;
+				// console.log(this.movielist)
 				this.isLoading = false;
 				this.prevCityId = id;
 				// this.$nextTick(() => {
@@ -86,8 +87,9 @@
 			})
 		},
 		methods: {
-			handleTotail() {
-				console.log(11111);
+			handleTotail(MovieId) {
+				// console.log(MovieId);
+				this.$router.push('/movie/detail/1/'+ MovieId)
 			},
 			handleToScroll(pos) {
 				if (pos.y > 20) {
